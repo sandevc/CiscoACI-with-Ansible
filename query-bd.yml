@@ -1,0 +1,17 @@
+---
+
+- name: query a bridge domain 
+  hosts: lab-apic
+  connection: local
+  gather_facts: yes
+
+
+  tasks:
+  - name: query all BDs
+    aci_bd:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       state: query
+

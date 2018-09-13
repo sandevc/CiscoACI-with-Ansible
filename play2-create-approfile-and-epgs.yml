@@ -1,0 +1,42 @@
+---
+
+- name: create application-profile and related epgs 
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add ap 
+     aci_ap:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       ap: app1
+       description: default app
+       state: present
+
+   - name: add epg
+     aci_epg:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       ap: app1
+       epg: web
+       bd: bd-1
+       state: present
+
+   - name: add epg
+     aci_epg:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       ap: app1
+       epg: db 
+       bd: bd-1
+       state: present 

@@ -1,0 +1,19 @@
+---
+
+- name: bind domain to vlan pool
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: add a l3out
+    aci_domain_to_vlan_pool:
+        host: "{{ ansible_host }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        validate_certs: no
+        domain: l2-tenant2
+        domain_type: l2dom
+        pool: tenant2-pool
+        pool_allocation_mode: static
+

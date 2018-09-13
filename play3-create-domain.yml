@@ -1,0 +1,17 @@
+---
+
+- name: create a physical or l2 or l3 or fc domain
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add a l2domain
+     aci_domain:
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      domain: l2-tenant2
+      domain_type: l2dom
+

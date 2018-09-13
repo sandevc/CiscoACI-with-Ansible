@@ -1,0 +1,30 @@
+---
+
+- name: create a new vlan pool
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add a new vlan pool
+     aci_encap_pool:
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      pool: tenant2-pool
+      pool_type: vlan
+      pool_allocation_mode: static
+
+   - name: add a new vlan range
+     aci_vlan_pool_encap_block:
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      pool: tenant2-pool
+      pool_allocation_mode: static
+      block_name: tenant2-pool
+      block_start: 30
+      block_end: 50
+

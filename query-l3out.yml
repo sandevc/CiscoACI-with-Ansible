@@ -1,0 +1,17 @@
+---
+
+- name: create a tenant
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: Query a L3out
+     aci_l3out:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       name: L3OUT-OSPF
+       state: query

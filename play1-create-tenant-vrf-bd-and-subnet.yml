@@ -1,0 +1,50 @@
+---
+
+- name: create a tenant
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add tenant
+     aci_tenant:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}" 
+       password: "{{ apic_password }}" 
+       validate_certs: no
+       tenant: tenant2
+       state: present
+
+   - name: add vrf
+     aci_vrf:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       vrf: tenant2
+       tenant: tenant2
+       policy_control_preference: enforced
+       policy_control_direction: ingress
+       state: present
+
+   - name: add bridge domain
+     aci_bd: 
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       state: present
+       tenant: tenant2
+       bd: bd-1
+       vrf: tenant2
+
+   - name: add subnet for bridge domain
+     aci_bd_subnet:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       bd: bd-1
+       gateway: 172.18.225.1
+       mask: 24 

@@ -1,0 +1,21 @@
+---
+
+- name: create a tenant
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add a l3out
+     aci_l3out:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       name: L3OUT-OSPF
+       description: "Test L3OUT created by Ansible"
+       domain: csr     
+       vrf: tenant2
+       l3protocol: ospf
+       route_control: export

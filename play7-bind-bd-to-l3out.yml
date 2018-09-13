@@ -1,0 +1,19 @@
+---
+
+- name: bind bridge-domain to l3out
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: bind bd to l3out
+    aci_bd_to_l3out:
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      tenant: tenant2
+      bd: bd-1
+      l3out: L3OUT-OSPF
+
+

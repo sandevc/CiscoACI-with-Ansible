@@ -1,0 +1,26 @@
+---
+
+- name: create an aep
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: create an aep
+    aci_aep:
+     host: "{{ ansible_host }}"
+     username: "{{ apic_username }}"
+     password: "{{ apic_password }}"
+     validate_certs: no
+     aep: aep-tenant2
+     
+  - name: bind aep to physical or external or vmm domain
+    aci_aep_to_domain:
+     host: "{{ ansible_host }}"
+     username: "{{ apic_username }}"
+     password: "{{ apic_password }}"
+     validate_certs: no
+     aep: aep-tenant2
+     domain: l2-tenant2
+     domain_type: l2dom
+

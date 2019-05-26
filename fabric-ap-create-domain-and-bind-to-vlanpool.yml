@@ -1,0 +1,28 @@
+---
+
+- name: create a physical or l2 or l3 or fc domain and bind to vlanpool
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add a l2domain
+     aci_domain:
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      domain: l2-tenant2
+      domain_type: l2dom
+
+   - name: bind domain to vlanpool
+     aci_domain_to_vlan_pool:
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      domain: l2-tenant2
+      domain_type: l2dom
+      pool: tenant2-pool
+      pool_allocation_mode: static
+

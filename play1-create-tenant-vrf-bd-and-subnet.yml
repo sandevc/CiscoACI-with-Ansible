@@ -12,7 +12,7 @@
        username: "{{ apic_username }}" 
        password: "{{ apic_password }}" 
        validate_certs: no
-       tenant: tenant2
+       tenant: tenant12
        state: present
 
    - name: add vrf

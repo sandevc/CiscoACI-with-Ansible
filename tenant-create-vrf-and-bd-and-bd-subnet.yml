@@ -1,6 +1,6 @@
 ---
 
-- name: create a tenant
+- name: create a tenant and its vrf. Also creates a BD under it and adds a subnet under the BD if needed.
   hosts: lab-apic
   connection: local
   gather_facts: no
@@ -47,4 +47,5 @@
        tenant: tenant2
        bd: bd-1
        gateway: 172.18.225.1
-       mask: 24 
+       mask: 24
+       scope: public 

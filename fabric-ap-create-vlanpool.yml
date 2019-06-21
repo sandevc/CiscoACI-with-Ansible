@@ -1,6 +1,6 @@
 ---
 
-- name: create a new vlan pool
+- name: create a new vlan pool. 
   hosts: lab-apic
   connection: local
   gather_facts: no

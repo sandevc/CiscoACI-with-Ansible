@@ -1,0 +1,17 @@
+---
+
+- name: create interface policies like enabling lldp, cdp, lacp, stp, .... and so on.
+  hosts: lab-apic
+  connection: local
+  gather_facts: no 
+
+  tasks: 
+   - name: add lldp policy
+     aci_interface_policy_lldp: 
+      host: "{{ ansible_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: no
+      lldp_policy: lldp-enabled
+      receive_state: yes
+      transmit_state: yes  

@@ -1,6 +1,6 @@
 ---
 
-- name: create an aep
+- name: create an aep and bind it to the domain.
   hosts: lab-apic
   connection: local
   gather_facts: no

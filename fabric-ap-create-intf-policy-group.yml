@@ -1,0 +1,18 @@
+---
+
+- name: create interface policy-group like access-port, po or vpc
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: create vpc policy-group, or just an access port or a port-channel. modify lag_type accordingly. 
+      aci_interface_policy_leaf_policy_group:
+        host: "{{ ansible_host }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        validate_certs: no
+        lag_type: node
+        policy_group: vpc-n5k
+        aep: aep-n5k
+

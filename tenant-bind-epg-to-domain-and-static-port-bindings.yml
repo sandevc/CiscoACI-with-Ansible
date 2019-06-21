@@ -1,0 +1,38 @@
+---
+
+- name: bind epg to domains and add static port bindings.
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+          - name: bind epg to domain
+            aci_epg_to_domain:
+                    host: "{{ ansible_host }}"
+                    username: "{{ apic_username }}"
+                    password: "{{ apic_password }}"
+                    validate_certs: no
+                    tenant: tenant2
+                    ap: app1
+                    epg: db
+                    domain: rhel_servers
+                    domain_type: phys
+       
+          - name: bind static ports to epg.
+            aci_static_binding_to_epg:
+                     host: "{{ ansible_host }}"
+                     username: "{{ apic_username }}"
+                     password: "{{ apic_password }}"
+                     validate_certs: no
+                     tenant: tenant2
+                     ap: app1
+                     epg: db
+                     encap_id: 835
+                     interface_type: vpc
+                     interface: vpc-n5k
+                     pod_id: 1
+                     leafs: 101,102
+
+
+
+                       

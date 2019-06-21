@@ -1,6 +1,6 @@
 ---
 
-- name: create application-profile and related epgs 
+- name: create application-profile and related epgs. Below shows only one epg, but more can be added. 
   hosts: lab-apic
   connection: local
   gather_facts: no

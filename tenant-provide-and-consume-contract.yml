@@ -1,0 +1,32 @@
+---
+
+- name: provide and consume the contract in the EPGs.
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+          - name: add a provider contract
+            aci_epg_to_contract:
+                    host: "{{ ansible_host }}"
+                    username: "{{ apic_username }}"
+                    password: "{{ apic_password }}"
+                    validate_certs: no
+                    tenant: tenant2
+                    ap: app1
+                    epg: db
+                    contract: contract-db
+                    contract_type: provider
+
+          - name: add a consumer contract
+            aci_epg_to_contract:
+                     host: "{{ ansible_host }}"
+                     username: "{{ apic_username }}"
+                     password: "{{ apic_password }}"
+                     validate_certs: no
+                     tenant: tenant2
+                     ap: app1
+                     epg: web
+                     contract: contract-db
+                     contract_type: consumer
+

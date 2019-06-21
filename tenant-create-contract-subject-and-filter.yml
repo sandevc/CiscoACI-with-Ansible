@@ -1,0 +1,60 @@
+---
+
+- name: create a new contract, subject and its filters under the tenant config.
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+          - name: add a new contract
+            aci_contract:
+                  host: "{{ ansible_host }}"
+                  username: "{{ apic_username }}"
+                  password: "{{ apic_password }}"
+                  validate_certs: no
+                  contract: contract-db
+                  tenant: tenant2
+
+          - name: add a new subject under the contract
+            aci_contract_subject:
+                  host: "{{ ansible_host }}"
+                  username: "{{ apic_username }}"
+                  password: "{{ apic_password }}"
+                  validate_certs: no
+                  contract: contract-db
+                  tenant: tenant2
+                  subject: subject-db
+
+          - name: create a filter
+            aci_filter: 
+                 host: "{{ ansible_host }}"
+                 username: "{{ apic_username }}"
+                 password: "{{ apic_password }}"
+                 validate_certs: no
+                 filter: filter-db
+                 tenant: common
+
+          - name: add a filter entry
+            aci_filter_entry:
+                     host: "{{ ansible_host }}"
+                     username: "{{ apic_username }}"
+                     password: "{{ apic_password }}"
+                     validate_certs: no
+                     tenant: common
+                     filter: filter-db
+                     entry: tcp1433
+                     ether_type: ip
+                     ip_protocol: tcp
+                     dst_port: 1433
+
+          - name: bind the filter to the subject
+            aci_contract_subject_to_filter:
+                     host: "{{ ansible_host }}"
+                     username: "{{ apic_username }}"
+                     password: "{{ apic_password }}"
+                     validate_certs: no
+                     tenant: tenant2
+                     contract: contract-db
+                     subject: subject-db
+                     filter: filter-db
+                     log: log

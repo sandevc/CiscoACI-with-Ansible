@@ -1,0 +1,137 @@
+---
+
+- name: create an ospf l3out (external routed networks)
+  hosts: lab-apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+   - name: add a l3out which uses ospf as the routing protocol.
+     aci_l3out:
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       tenant: tenant2
+       name: l3out-ospf-n5k
+       description: "Test L3OUT created by Ansible"
+       domain: vpc-n5k
+       vrf: tenant2
+       l3protocol: ospf
+       route_control: export
+
+   - name: modify ospf attribures using the aci_rest module in yml format.
+     aci_rest: 
+       host: "{{ ansible_host }}"
+       username: "{{ apic_username }}"
+       password: "{{ apic_password }}"
+       validate_certs: no
+       path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k.json
+       method: post
+       content: 
+         ospfExtP:
+                 attributes: 
+                   areaId: 0.0.0.0 
+                   areaType: regular
+                    
+   - name: create the node profile using aci_rest in yml format.
+     aci_rest:
+             host: "{{ ansible_host }}"
+             username: "{{ apic_username}}"
+             password: "{{ apic_password}}"
+             validate_certs: no
+             path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k.json
+             method: post
+             content: 
+               l3extLNodeP: 
+                 attributes:
+                         name: nodes-ospf-n5k
+                           
+   - name: add first node to the node-profile using aci_rest
+     aci_rest:
+             host: "{{ ansible_host }}"
+             username: "{{ apic_username }}"
+             password: "{{ apic_password }}"
+             validate_certs: no
+             path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k/lnodep-nodes-ospf-n5k.json
+             method: post
+             content: 
+               l3extRsNodeL3OutAtt:
+                attributes:
+                        tDn: topology/pod-1/node-101
+                        rtrId: 101.101.101.101
+
+   - name: add second node to the node profile using aci_rest
+     aci_rest:
+             host: "{{ ansible_host }}"
+             username: "{{ apic_username }}"
+             password: "{{ apic_password }}"
+             validate_certs: no
+             path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k/lnodep-nodes-ospf-n5k.json
+             method: post
+             content: 
+               l3extRsNodeL3OutAtt:
+                       attributes: 
+                         tDn: topology/pod-1/node-102
+                         rtrId: 102.102.102.102
+
+   - name: create external-epg using aci_rest module in yml format.
+     aci_rest:
+             host: "{{ ansible_host }}"
+             username: "{{ apic_username }}"
+             password: "{{ apic_password }}"
+             validate_certs: no
+             path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k.json
+             method: post
+             content:
+                     l3extInstP: 
+                             attributes: 
+                                name: ext-epg-ospf-n5k
+              
+   - name: create logical-interface profile using aci_rest.
+     aci_rest:
+             host: "{{ ansible_host }}"
+             username: "{{ apic_username }}"
+             password: "{{ apic_password }}"
+             validate_certs: no
+             path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k/lnodep-nodes-ospf-n5k.json
+             method: post
+             content: 
+                l3extLIfP: 
+                     attributes:
+                             name: intpf-ospf-n5k
+                l3extRsNodeL3OutAtt: 
+                     attributes: 
+                             rtrId: 101.101.101.101
+                             tDn: topology/pod-1/node-101
+
+                l3extRsNodeL3OutAtt: 
+                     attributes: 
+                             rtrId: 102.102.102.102
+                             tDn: topology/pod-1/node-102
+
+   - name: add path details to the logical interface profile using aci_rest
+     aci_rest:
+             host: "{{ ansible_host }}"
+             username: "{{ apic_username }}"
+             password: "{{ apic_password }}"
+             validate_certs: no
+             path: /api/node/mo/uni/tn-tenant2/out-l3out-ospf-n5k/lnodep-nodes-ospf-n5k/lipf-intpf-ospf-n5k.json
+             method: post
+             content:
+                     l3extRsPathL3OutAtt:
+                             attributes:
+                                     encap: vlan-35
+                                     fInstT": ext-svi
+                                     Dn": topology/pod-1/protpaths-101-102/pathep-[vpc-n5k]
+
+   - name: create an  ospf interface policy for broadcast and ignore-mtu
+     aci_interface_policy_ospf:
+        host: "{{ ansible_host }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        validate_certs: no
+        tenant: tenant2
+        network_type: bcast
+        ospf: ospf-bcast-intf-policy
+        controls: mtu-ignore
